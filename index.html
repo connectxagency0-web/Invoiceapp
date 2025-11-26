@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Générateur de facture – NUVANE & COMPANY</title>
+  <title>Générateur de devis – NUVANE & COMPANY</title>
   <style>
     :root{
       --accent-start:#ff6b00;
@@ -20,19 +20,20 @@
 
     body{
       margin:0;
-      background:#020617 !important; /* plein écran noir */
+      background:#020617 !important;
       color:var(--text-main);
       min-height:100vh;
     }
 
     .container{
-      max-width:1200px;
+      max-width:900px;
       margin:24px auto 40px;
       padding:0 16px;
-      display:grid;
-      grid-template-columns:380px 1fr;
+      display:flex;
+      flex-direction:column;
       gap:20px;
     }
+
     .panel{
       background:var(--card);
       border-radius:18px;
@@ -41,18 +42,21 @@
       border:1px solid var(--card-border);
       backdrop-filter:blur(18px);
     }
+
     h2{
       margin:0 0 12px;
       font-size:18px;
       color:var(--text-main);
       letter-spacing:0.03em;
     }
+
     label{
       display:block;
       font-size:13px;
       color:var(--text-muted);
       margin:10px 0 6px;
     }
+
     input[type="text"],
     input[type="number"],
     input[type="date"],
@@ -79,7 +83,7 @@
       box-shadow:0 0 0 1px rgba(251,191,36,0.6);
       background:#020617;
     }
-    textarea{min-height:70px;resize:vertical}
+    textarea{resize:vertical;}
 
     .btn{
       display:inline-block;
@@ -122,6 +126,7 @@
     th,td{
       padding:11px 10px;
       text-align:left;
+      vertical-align:top;
     }
     th{
       background:linear-gradient(135deg,#f97316,#facc15);
@@ -146,7 +151,7 @@
       border-radius:22px;
       box-shadow:0 22px 60px rgba(0,0,0,0.9);
       border:1px solid #1f2937;
-      max-width:900px;
+      max-width:100%;
       margin:0 auto;
     }
 
@@ -154,7 +159,7 @@
     .spacer{flex:1;}
 
     .logo{
-      height:108px;           /* +50% */
+      height:108px;
       object-fit:contain;
     }
 
@@ -181,22 +186,31 @@
       box-shadow:0 10px 26px rgba(248,113,113,0.7);
     }
 
-    .hidden{display:none;}
-
-    @media (max-width:980px){
-      .container{
-        grid-template-columns:1fr;
-        padding:0 8px 24px;
-      }
-      .invoice-card{max-width:100%;padding:18px 14px;}
+    .delete-btn{
+      padding:4px 10px;
+      border-radius:999px;
+      border:none;
+      background:#7f1d1d;
+      color:#fecaca;
+      font-size:12px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
     }
+    .delete-btn:hover{
+      background:#b91c1c;
+      color:#fee2e2;
+    }
+
+    .hidden{display:none;}
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- LEFT PANEL -->
+    <!-- PANEL HAUT : INPUTS -->
     <div class="panel">
-      <h2>Paramètres de la facture</h2>
+      <h2>Paramètres du devis</h2>
 
       <label>Nom de l'entreprise</label>
       <input id="bizName" type="text" value="NUVANE &amp; COMPANY"/>
@@ -222,27 +236,27 @@ AGDAL RABAT</textarea>
 
       <div style="display:flex;gap:8px">
         <div style="flex:1">
-          <label>N° de facture</label>
-          <input id="invoiceNumber" type="text" value="FAC-2025-001"/>
+          <label>N° de devis</label>
+          <input id="invoiceNumber" type="text" value="DEV-2025-001"/>
         </div>
         <div style="width:150px">
-          <label>Date</label>
+          <label>Date du devis</label>
           <input id="invoiceDate" type="date" />
         </div>
       </div>
 
       <hr style="margin:12px 0;border:none;border-top:1px solid #1f2937"/>
 
-      <h3 class="small" style="margin:8px 0 6px">Lignes de facture</h3>
+      <h3 class="small" style="margin:8px 0 6px">Lignes du devis</h3>
       <div class="line-items panel" style="padding:0">
         <table id="itemsTable">
           <thead>
             <tr>
-              <th style="width:26%">Article</th>
-              <th style="width:34%">Description détaillée</th>
+              <th style="width:24%">Service</th>
+              <th style="width:38%">Description détaillée</th>
               <th style="width:10%">Qté</th>
               <th style="width:16%">Prix unitaire</th>
-              <th style="width:10%">Total</th>
+              <th style="width:8%">Total</th>
               <th style="width:4%"></th>
             </tr>
           </thead>
@@ -250,7 +264,7 @@ AGDAL RABAT</textarea>
         </table>
       </div>
       <div style="margin-top:8px">
-        <button id="addItemBtn" class="btn">+ Ajouter une ligne</button>
+        <button id="addItemBtn" class="btn">+ Ajouter une ligne de service</button>
       </div>
 
       <label style="margin-top:12px">TVA (%)</label>
@@ -266,16 +280,15 @@ AGDAL RABAT</textarea>
       </div>
 
       <div style="margin-top:12px" class="small muted">
-        Ajoutez vos lignes, renseignez la TVA et la remise, puis cliquez sur « Générer le PDF ».
+        Ajoutez vos services manuellement, vous pouvez copier/coller et aller à la ligne (Entrée) dans les champs de texte, puis générez le PDF.
       </div>
     </div>
 
-    <!-- RIGHT PANEL - PREVIEW -->
+    <!-- PANEL BAS : APERÇU -->
     <div class="panel invoice-preview">
       <div class="invoice-card" id="invoiceArea">
         <div class="flex">
           <div>
-            <!-- Logo via Imgur -->
             <img id="logoPreview" class="logo" src="https://i.imgur.com/G1lFjjM.png" alt="NUVANE &amp; COMPANY" />
             <div style="margin-top:8px">
               <div id="bizNamePreview" style="font-weight:700;font-size:20px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-main)">NUVANE &amp; COMPANY</div>
@@ -286,8 +299,8 @@ AGDAL RABAT</textarea>
           </div>
           <div class="spacer"></div>
           <div style="text-align:right">
-            <div style="font-weight:800;font-size:22px;background:linear-gradient(135deg,#f97316,#facc15);-webkit-background-clip:text;color:transparent;letter-spacing:0.08em;">FACTURE</div>
-            <div class="small">N° <span id="invNumberPreview">FAC-2025-001</span></div>
+            <div style="font-weight:800;font-size:22px;color:#facc15;letter-spacing:0.08em;">DEVIS</div>
+            <div class="small">N° <span id="invNumberPreview">DEV-2025-001</span></div>
             <div class="small">Date : <span id="invDatePreview"></span></div>
           </div>
         </div>
@@ -296,13 +309,13 @@ AGDAL RABAT</textarea>
 
         <div style="display:flex;gap:20px">
           <div style="flex:1">
-            <div class="small" style="text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Facturer à</div>
+            <div class="small" style="text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Devis pour</div>
             <div id="clientNamePreview" style="font-weight:600;font-size:15px;margin-top:2px;color:var(--text-main)">Nom du client</div>
             <div id="clientAddressPreview" class="small">Adresse du client</div>
           </div>
           <div style="width:220px;text-align:right">
-            <div class="small">Conditions de paiement</div>
-            <div class="small">Payable à réception</div>
+            <div class="small">Validité du devis</div>
+            <div class="small">Offre valable 30 jours</div>
           </div>
         </div>
 
@@ -318,7 +331,8 @@ AGDAL RABAT</textarea>
         <div class="totals" id="totalsArea"></div>
 
         <div style="margin-top:18px" class="small muted">
-          Merci pour votre confiance. Paiement par virement ou chèque.<br/>
+          Ce devis ne vaut pas facture. Les prestations seront réalisées après acceptation du devis.<br/>
+          Pour accepter ce devis, merci de nous le confirmer par e-mail ou signature.<br/>
           NUVANE &amp; COMPANY – The psychology of growth.
         </div>
       </div>
@@ -355,7 +369,6 @@ AGDAL RABAT</textarea>
   const totalsArea = document.getElementById('totalsArea');
   const invoiceArea = document.getElementById('invoiceArea');
 
-  // Date du jour par défaut
   (function setToday(){
     const today = new Date().toISOString().slice(0,10);
     invoiceDate.value = today;
@@ -377,15 +390,27 @@ AGDAL RABAT</textarea>
       .replaceAll("'",'&#39;');
   }
 
-  function addItem(desc='Séance / service', notes='', qty=1, unit=0){
+  function escapeHtmlWithBreaks(s){
+    return escapeHtml(s).replace(/\n/g,'<br>');
+  }
+
+  function addItem(desc='', notes='', qty=1, unit=0){
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><input class="item-desc" type="text" value="${escapeHtml(desc)}" /></td>
-      <td><input class="item-notes" type="text" value="${escapeHtml(notes)}" placeholder="Description détaillée (optionnelle)" /></td>
+      <td>
+        <textarea class="item-desc" rows="1" placeholder="Nom du service (copier/coller possible)">${escapeHtml(desc)}</textarea>
+      </td>
+      <td>
+        <textarea class="item-notes" rows="2" placeholder="Description détaillée (Entrée pour aller à la ligne)">${escapeHtml(notes)}</textarea>
+      </td>
       <td><input class="item-qty" type="number" value="${qty}" min="0" /></td>
       <td><input class="item-unit" type="number" value="${unit}" min="0" step="0.01" /></td>
       <td class="text-right item-total">${fmt(qty*unit)}</td>
-      <td style="text-align:center"><button class="removeBtn" title="Supprimer la ligne" style="background:none;border:0;color:#f97316;cursor:pointer;font-size:16px">✕</button></td>
+      <td style="text-align:center">
+        <button class="delete-btn removeBtn" title="Supprimer cette ligne">
+          🗑 Supprimer
+        </button>
+      </td>
     `;
     itemsBody.appendChild(tr);
     bindRowEvents(tr);
@@ -410,17 +435,18 @@ AGDAL RABAT</textarea>
     if(notes){ notes.addEventListener('input', refreshPreview); }
     qty.addEventListener('input', updateRow);
     unit.addEventListener('input', updateRow);
-    removeBtn.addEventListener('click', ()=>{ tr.remove(); refreshPreview(); });
+    removeBtn.addEventListener('click', ()=>{
+      tr.remove();
+      refreshPreview();
+    });
   }
 
-  // Lignes par défaut
-  addItem('Consultation psychologique individuelle', 'Séance en cabinet ou en ligne – 50 minutes', 1, 600);
-  addItem('Bilan / préparation de compte rendu clinique', 'Analyse, rédaction et synthèse des éléments cliniques', 1, 1000);
-
-  addItemBtn.addEventListener('click',()=>addItem('Nouveau service','',1,0));
+  // Pas de lignes par défaut : l'utilisateur ajoute manuellement
+  addItemBtn.addEventListener('click',()=>addItem('', '', 1, 0));
   previewBtn.addEventListener('click', refreshPreview);
+
   clearBtn.addEventListener('click', ()=>{
-    if(!confirm('Effacer tous les champs et toutes les lignes ?')) return;
+    if(!confirm('Effacer tous les champs et toutes les lignes du devis ?')) return;
     bizName.value='NUVANE & COMPANY';
     bizAddress.value='5 RUE DARAA RES FATIMA ZAHRA APPT 5\nAGDAL RABAT';
     bizContact.value='+212620908676';
@@ -480,13 +506,15 @@ AGDAL RABAT</textarea>
       const amount = it.qty * it.unit;
       subtotal += amount;
 
-      const descText = escapeHtml(it.desc || '');
-      const notesText = it.notes
-        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtml(it.notes)}</div>`
+      const serviceHtml = it.desc
+        ? `<strong>${escapeHtmlWithBreaks(it.desc)}</strong>`
+        : '';
+      const notesHtml = it.notes
+        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtmlWithBreaks(it.notes)}</div>`
         : '';
 
       row.innerHTML = `
-        <td>${descText}${notesText}</td>
+        <td>${serviceHtml}${notesHtml}</td>
         <td>${it.qty}</td>
         <td>${fmt(it.unit)}</td>
         <td class="text-right">${fmt(amount)}</td>
@@ -527,7 +555,7 @@ AGDAL RABAT</textarea>
     refreshPreview();
     const items = getItems();
     if(items.length === 0){
-      alert('Ajoutez au moins une ligne de facture.');
+      alert('Ajoutez au moins un service dans le devis.');
       return;
     }
 
@@ -538,7 +566,6 @@ AGDAL RABAT</textarea>
       return;
     }
 
-    // Clone l'aperçu et conserve le thème sombre pour le PDF
     const clone = invoiceArea.cloneNode(true);
     clone.style.width = '190mm';
     clone.style.maxWidth = '190mm';
@@ -566,9 +593,9 @@ AGDAL RABAT</textarea>
 
     const opt = {
       margin: [0,0,0,0],
-      filename: (invoiceNumber.value || 'facture') + '.pdf',
+      filename: (invoiceNumber.value || 'devis') + '.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#020617' },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
