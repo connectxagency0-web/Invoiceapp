@@ -3,65 +3,216 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Générateur de facture</title>
+  <title>Générateur de facture – NUVANE & COMPANY</title>
   <style>
     :root{
-      --accent:#467FF7;
-      --muted:#6b7280;
-      --card:#ffffff;
-      --bg:#f4f6fb;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --accent-start:#ff6b00;
+      --accent-end:#ffb000;
+      --bg:#020617;
+      --card:#020617;
+      --card-border:#1f2937;
+      --text-main:#f9fafb;
+      --text-muted:#d1d5db;
+      --line:#111827;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    body{margin:0;background:var(--bg);color:#111}
-    .container{max-width:1100px;margin:28px auto;padding:20px;display:grid;grid-template-columns:380px 1fr;gap:20px}
-    .panel{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
-    h2{margin:0 0 12px;font-size:18px;color:var(--accent)}
-    label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
-    input[type="text"],input[type="number"],input[type="date"],textarea,select{
-      width:100%;padding:8px;border-radius:8px;border:1px solid #e6e9ef;font-size:14px;
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      background:#020617 !important; /* plein écran noir */
+      color:var(--text-main);
+      min-height:100vh;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:24px auto 40px;
+      padding:0 16px;
+      display:grid;
+      grid-template-columns:380px 1fr;
+      gap:20px;
+    }
+    .panel{
+      background:var(--card);
+      border-radius:18px;
+      padding:18px 16px;
+      box-shadow:0 18px 45px rgba(0,0,0,0.75);
+      border:1px solid var(--card-border);
+      backdrop-filter:blur(18px);
+    }
+    h2{
+      margin:0 0 12px;
+      font-size:18px;
+      color:var(--text-main);
+      letter-spacing:0.03em;
+    }
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--text-muted);
+      margin:10px 0 6px;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea,
+    select{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid #374151;
+      font-size:14px;
+      background:#020617;
+      color:var(--text-main);
+      outline:none;
+      transition:border 0.15s, box-shadow 0.15s, background 0.15s;
+      line-height:1.4;
+    }
+    input::placeholder,
+    textarea::placeholder{
+      color:#6b7280;
+    }
+    input:focus,
+    textarea:focus{
+      border-color:var(--accent-end);
+      box-shadow:0 0 0 1px rgba(251,191,36,0.6);
+      background:#020617;
     }
     textarea{min-height:70px;resize:vertical}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
-    .muted{color:var(--muted);font-size:13px}
-    .line-items{margin-top:12px;border-radius:8px;overflow:hidden}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:10px;border-bottom:1px solid #f0f2f7;text-align:left}
-    th{background:#fbfcff;font-weight:700;color:#2b2b2b}
-    .text-right{text-align:right}
-    .invoice-preview{padding:24px}
-    .invoice-card{background:#fff;padding:24px;border-radius:10px;box-shadow:0 8px 30px rgba(12,15,30,0.06)}
-    .flex{display:flex;gap:12px;align-items:center}
-    .spacer{flex:1}
-    .logo{height:60px;object-fit:contain}
-    .small{font-size:13px;color:var(--muted)}
-    .totals{margin-top:14px}
-    .totals-row{display:flex;justify-content:space-between;padding:6px 0}
-    .actions{margin-top:12px;display:flex;gap:8px;align-items:center}
-    .danger{background:#ff5c5c}
-    .hidden{display:none}
-    @media (max-width:980px){.container{grid-template-columns:1fr;padding:12px}}
+
+    .btn{
+      display:inline-block;
+      padding:9px 14px;
+      border-radius:999px;
+      border:0;
+      background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
+      color:#111827;
+      font-weight:600;
+      cursor:pointer;
+      font-size:13px;
+      box-shadow:0 8px 20px rgba(251,191,36,0.45);
+      transition:transform 0.08s, box-shadow 0.08s, filter 0.08s;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 12px 28px rgba(251,191,36,0.55);
+    }
+    .btn:active{
+      transform:translateY(0);
+      box-shadow:0 4px 12px rgba(15,23,42,0.7);
+    }
+
+    .muted{color:var(--text-muted);font-size:13px}
+
+    .line-items{
+      margin-top:12px;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid #1f2937;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+    th,td{
+      padding:11px 10px;
+      text-align:left;
+    }
+    th{
+      background:linear-gradient(135deg,#f97316,#facc15);
+      color:#111827;
+      font-weight:700;
+      border-bottom:1px solid #111827;
+    }
+    td{
+      background:#020617;
+      color:var(--text-main);
+      border-bottom:1px solid #111827;
+    }
+    tr:last-child td{border-bottom:none;}
+
+    .text-right{text-align:right;}
+
+    .invoice-preview{padding:10px 4px;}
+
+    .invoice-card{
+      background:#020617;
+      padding:24px 26px;
+      border-radius:22px;
+      box-shadow:0 22px 60px rgba(0,0,0,0.9);
+      border:1px solid #1f2937;
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    .flex{display:flex;gap:12px;align-items:center;}
+    .spacer{flex:1;}
+
+    .logo{
+      height:108px;           /* +50% */
+      object-fit:contain;
+    }
+
+    .small{font-size:13px;color:var(--text-muted);}
+
+    .totals{margin-top:16px;}
+    .totals-row{display:flex;justify-content:space-between;padding:4px 0;}
+
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .danger{
+      background:#ef4444;
+      color:#fef2f2;
+      box-shadow:0 8px 20px rgba(248,113,113,0.55);
+    }
+    .danger:hover{
+      filter:brightness(1.05);
+      box-shadow:0 10px 26px rgba(248,113,113,0.7);
+    }
+
+    .hidden{display:none;}
+
+    @media (max-width:980px){
+      .container{
+        grid-template-columns:1fr;
+        padding:0 8px 24px;
+      }
+      .invoice-card{max-width:100%;padding:18px 14px;}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- LEFT PANEL - INPUTS -->
+    <!-- LEFT PANEL -->
     <div class="panel">
       <h2>Paramètres de la facture</h2>
 
       <label>Nom de l'entreprise</label>
-      <input id="bizName" type="text" value="Ma Société SARL"/>
+      <input id="bizName" type="text" value="NUVANE &amp; COMPANY"/>
 
       <label>Adresse de l'entreprise</label>
-      <textarea id="bizAddress">123 Rue Exemple, Rabat, Maroc</textarea>
+      <textarea id="bizAddress">5 RUE DARAA RES FATIMA ZAHRA APPT 5
+AGDAL RABAT</textarea>
 
       <label>Téléphone / e-mail de l'entreprise</label>
-      <input id="bizContact" type="text" value="info@company.test - +212 6 12 34 56 78"/>
+      <input id="bizContact" type="text" value="+212620908676"/>
 
       <label>Téléverser un logo (optionnel)</label>
       <input id="logoInput" type="file" accept="image/*"/>
-      <div class="small muted">Formats PNG / JPG recommandés. Affiché dans l'en-tête de la facture.</div>
+      <div class="small muted">Un logo par défaut est chargé. Téléversez un fichier pour le remplacer.</div>
 
-      <hr style="margin:12px 0;border:none;border-top:1px solid #f0f2f7"/>
+      <hr style="margin:12px 0;border:none;border-top:1px solid #1f2937"/>
 
       <label>Nom du client</label>
       <input id="clientName" type="text" value="Nom du client"/>
@@ -76,26 +227,26 @@
         </div>
         <div style="width:150px">
           <label>Date</label>
-          <input id="invoiceDate" type="date" value="" />
+          <input id="invoiceDate" type="date" />
         </div>
       </div>
 
-      <hr style="margin:12px 0;border:none;border-top:1px solid #f0f2f7"/>
+      <hr style="margin:12px 0;border:none;border-top:1px solid #1f2937"/>
 
       <h3 class="small" style="margin:8px 0 6px">Lignes de facture</h3>
       <div class="line-items panel" style="padding:0">
         <table id="itemsTable">
-          <thead><tr>
-            <th style="width:28%">Article</th>
-            <th style="width:32%">Description détaillée</th>
-            <th style="width:10%">Qté</th>
-            <th style="width:16%">Prix unitaire</th>
-            <th style="width:10%">Total</th>
-            <th style="width:4%"></th>
-          </tr></thead>
-          <tbody id="itemsBody">
-            <!-- rows inserted here -->
-          </tbody>
+          <thead>
+            <tr>
+              <th style="width:26%">Article</th>
+              <th style="width:34%">Description détaillée</th>
+              <th style="width:10%">Qté</th>
+              <th style="width:16%">Prix unitaire</th>
+              <th style="width:10%">Total</th>
+              <th style="width:4%"></th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
         </table>
       </div>
       <div style="margin-top:8px">
@@ -110,12 +261,12 @@
 
       <div class="actions">
         <button id="generateBtn" class="btn">Générer le PDF</button>
-        <button id="previewBtn" class="btn" style="background:#0ea5a2">Actualiser l'aperçu</button>
+        <button id="previewBtn" class="btn" style="background:linear-gradient(135deg,#22c55e,#a3e635);box-shadow:0 8px 20px rgba(34,197,94,0.45);">Actualiser l'aperçu</button>
         <button id="clearBtn" class="btn danger">Effacer</button>
       </div>
 
       <div style="margin-top:12px" class="small muted">
-        Astuce : ajoutez vos lignes, renseignez la TVA et la remise, puis cliquez sur « Générer le PDF ». L’aperçu de la facture se met à jour automatiquement lorsque vous modifiez les champs.
+        Ajoutez vos lignes, renseignez la TVA et la remise, puis cliquez sur « Générer le PDF ».
       </div>
     </div>
 
@@ -124,30 +275,32 @@
       <div class="invoice-card" id="invoiceArea">
         <div class="flex">
           <div>
-            <img id="logoPreview" class="logo hidden" alt="logo" />
+            <!-- Logo via Imgur -->
+            <img id="logoPreview" class="logo" src="https://i.imgur.com/G1lFjjM.png" alt="NUVANE &amp; COMPANY" />
             <div style="margin-top:8px">
-              <div id="bizNamePreview" style="font-weight:700;font-size:18px">Ma Société SARL</div>
-              <div id="bizAddressPreview" class="small">123 Rue Exemple, Rabat, Maroc</div>
-              <div id="bizContactPreview" class="small">info@company.test</div>
+              <div id="bizNamePreview" style="font-weight:700;font-size:20px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-main)">NUVANE &amp; COMPANY</div>
+              <div id="bizAddressPreview" class="small">5 RUE DARAA RES FATIMA ZAHRA APPT 5 – AGDAL RABAT</div>
+              <div id="bizContactPreview" class="small">+212620908676</div>
+              <div class="small" style="margin-top:4px;color:#fbbf24">The psychology of growth</div>
             </div>
           </div>
           <div class="spacer"></div>
           <div style="text-align:right">
-            <div style="font-weight:700">FACTURE</div>
+            <div style="font-weight:800;font-size:22px;background:linear-gradient(135deg,#f97316,#facc15);-webkit-background-clip:text;color:transparent;letter-spacing:0.08em;">FACTURE</div>
             <div class="small">N° <span id="invNumberPreview">FAC-2025-001</span></div>
             <div class="small">Date : <span id="invDatePreview"></span></div>
           </div>
         </div>
 
-        <hr style="margin:14px 0;border:none;border-top:1px solid #f0f2f7"/>
+        <hr style="margin:14px 0;border:none;border-top:1px solid #1f2937"/>
 
         <div style="display:flex;gap:20px">
           <div style="flex:1">
-            <div class="small">FACTURER À</div>
-            <div id="clientNamePreview" style="font-weight:600">Nom du client</div>
+            <div class="small" style="text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">Facturer à</div>
+            <div id="clientNamePreview" style="font-weight:600;font-size:15px;margin-top:2px;color:var(--text-main)">Nom du client</div>
             <div id="clientAddressPreview" class="small">Adresse du client</div>
           </div>
-          <div style="width:200px;text-align:right">
+          <div style="width:220px;text-align:right">
             <div class="small">Conditions de paiement</div>
             <div class="small">Payable à réception</div>
           </div>
@@ -162,17 +315,17 @@
           </table>
         </div>
 
-        <div class="totals" id="totalsArea">
-          <!-- totals injected here -->
-        </div>
+        <div class="totals" id="totalsArea"></div>
 
-        <div style="margin-top:12px" class="small muted">Merci pour votre confiance. Paiement par virement ou chèque.</div>
+        <div style="margin-top:18px" class="small muted">
+          Merci pour votre confiance. Paiement par virement ou chèque.<br/>
+          NUVANE &amp; COMPANY – The psychology of growth.
+        </div>
       </div>
     </div>
   </div>
 
 <script>
-  // Simple invoice generator logic
   const itemsBody = document.getElementById('itemsBody');
   const previewItemsBody = document.getElementById('previewItemsBody');
   const addItemBtn = document.getElementById('addItemBtn');
@@ -180,7 +333,6 @@
   const previewBtn = document.getElementById('previewBtn');
   const clearBtn = document.getElementById('clearBtn');
 
-  // Inputs to mirror
   const bizName = document.getElementById('bizName');
   const bizAddress = document.getElementById('bizAddress');
   const bizContact = document.getElementById('bizContact');
@@ -193,7 +345,6 @@
   const logoInput = document.getElementById('logoInput');
   const logoPreview = document.getElementById('logoPreview');
 
-  // preview elements
   const bizNamePreview = document.getElementById('bizNamePreview');
   const bizAddressPreview = document.getElementById('bizAddressPreview');
   const bizContactPreview = document.getElementById('bizContactPreview');
@@ -204,16 +355,17 @@
   const totalsArea = document.getElementById('totalsArea');
   const invoiceArea = document.getElementById('invoiceArea');
 
-  // default date to today
+  // Date du jour par défaut
   (function setToday(){
     const today = new Date().toISOString().slice(0,10);
     invoiceDate.value = today;
   })();
 
-  // Utility to format money
   function fmt(n){
-    const formatted = Number(n || 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-    return formatted;
+    return Number(n || 0).toLocaleString(undefined, {
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    });
   }
 
   function escapeHtml(s){
@@ -225,8 +377,7 @@
       .replaceAll("'",'&#39;');
   }
 
-  // create default item (avec description détaillée)
-  function addItem(desc='Libellé du service', notes='', qty=1, unit=0){
+  function addItem(desc='Séance / service', notes='', qty=1, unit=0){
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><input class="item-desc" type="text" value="${escapeHtml(desc)}" /></td>
@@ -234,10 +385,9 @@
       <td><input class="item-qty" type="number" value="${qty}" min="0" /></td>
       <td><input class="item-unit" type="number" value="${unit}" min="0" step="0.01" /></td>
       <td class="text-right item-total">${fmt(qty*unit)}</td>
-      <td style="text-align:center"><button class="removeBtn" title="Supprimer la ligne" style="background:#fff;border:0;color:#ff5c5c;cursor:pointer">✕</button></td>
+      <td style="text-align:center"><button class="removeBtn" title="Supprimer la ligne" style="background:none;border:0;color:#f97316;cursor:pointer;font-size:16px">✕</button></td>
     `;
     itemsBody.appendChild(tr);
-
     bindRowEvents(tr);
     refreshPreview();
   }
@@ -263,24 +413,31 @@
     removeBtn.addEventListener('click', ()=>{ tr.remove(); refreshPreview(); });
   }
 
-  // initial rows
-  addItem('Conception de site web - 1 page', 'Mise en place et design de la page d’accueil', 1, 1200);
-  addItem('Optimisation Google My Business', 'Configuration, amélioration de la fiche et conseils de visibilité locale', 1, 600);
+  // Lignes par défaut
+  addItem('Consultation psychologique individuelle', 'Séance en cabinet ou en ligne – 50 minutes', 1, 600);
+  addItem('Bilan / préparation de compte rendu clinique', 'Analyse, rédaction et synthèse des éléments cliniques', 1, 1000);
 
   addItemBtn.addEventListener('click',()=>addItem('Nouveau service','',1,0));
   previewBtn.addEventListener('click', refreshPreview);
   clearBtn.addEventListener('click', ()=>{
     if(!confirm('Effacer tous les champs et toutes les lignes ?')) return;
-    bizName.value='';bizAddress.value='';bizContact.value='';
-    clientName.value='';clientAddress.value='';
-    invoiceNumber.value='';taxPct.value=0;discount.value=0;
+    bizName.value='NUVANE & COMPANY';
+    bizAddress.value='5 RUE DARAA RES FATIMA ZAHRA APPT 5\nAGDAL RABAT';
+    bizContact.value='+212620908676';
+    clientName.value='';
+    clientAddress.value='';
+    invoiceNumber.value='';
+    taxPct.value=0;
+    discount.value=0;
     itemsBody.innerHTML='';
     previewItemsBody.innerHTML='';
     totalsArea.innerHTML='';
-    logoPreview.src='';logoPreview.classList.add('hidden');
+    logoPreview.src='https://i.imgur.com/G1lFjjM.png';
+    const today = new Date().toISOString().slice(0,10);
+    invoiceDate.value = today;
+    refreshPreview();
   });
 
-  // mirror inputs to preview
   [bizName,bizAddress,bizContact,clientName,clientAddress,invoiceNumber,invoiceDate,taxPct,discount].forEach(inp=>{
     inp.addEventListener('input', refreshPreview);
   });
@@ -289,44 +446,43 @@
     const f = e.target.files && e.target.files[0];
     if(!f) return;
     const reader = new FileReader();
-    reader.onload = function(){ logoPreview.src = reader.result; logoPreview.classList.remove('hidden'); refreshPreview(); }
+    reader.onload = function(){
+      logoPreview.src = reader.result;
+      refreshPreview();
+    };
     reader.readAsDataURL(f);
   });
 
   function getItems(){
-    const rows = Array.from(itemsBody.querySelectorAll('tr'));
-    return rows.map(r=>{
-      return {
-        desc: r.querySelector('.item-desc') ? (r.querySelector('.item-desc').value||'') : '',
-        notes: r.querySelector('.item-notes') ? (r.querySelector('.item-notes').value||'') : '',
-        qty: Number(r.querySelector('.item-qty').value||0),
-        unit: Number(r.querySelector('.item-unit').value||0)
-      };
-    });
+    return Array.from(itemsBody.querySelectorAll('tr')).map(r=>({
+      desc: r.querySelector('.item-desc')?.value || '',
+      notes: r.querySelector('.item-notes')?.value || '',
+      qty: Number(r.querySelector('.item-qty')?.value || 0),
+      unit: Number(r.querySelector('.item-unit')?.value || 0)
+    }));
   }
 
   function refreshPreview(){
-    // mirror texts
     bizNamePreview.textContent = bizName.value || '—';
-    bizAddressPreview.textContent = bizAddress.value || '';
+    bizAddressPreview.textContent = (bizAddress.value || '').replace(/\n/g,' – ');
     bizContactPreview.textContent = bizContact.value || '';
     clientNamePreview.textContent = clientName.value || '—';
     clientAddressPreview.textContent = clientAddress.value || '';
     invNumberPreview.textContent = invoiceNumber.value || '—';
     invDatePreview.textContent = invoiceDate.value || '';
 
-    // items
     const items = getItems();
     previewItemsBody.innerHTML='';
     let subtotal = 0;
-    items.forEach((it)=>{
+
+    items.forEach(it=>{
       const row = document.createElement('tr');
       const amount = it.qty * it.unit;
       subtotal += amount;
 
       const descText = escapeHtml(it.desc || '');
       const notesText = it.notes
-        ? `<div class="small" style="color:#6b7280">${escapeHtml(it.notes)}</div>`
+        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtml(it.notes)}</div>`
         : '';
 
       row.innerHTML = `
@@ -344,17 +500,18 @@
     const total = subtotal + taxAmount - discountVal;
 
     totalsArea.innerHTML = `
-      <div style="max-width:360px;margin-left:auto">
+      <div style="max-width:360px;margin-left:auto;margin-top:10px;background:#020617;border-radius:14px;padding:12px 14px;border:1px solid #1f2937">
         <div class="totals-row"><div class="small">Sous-total</div><div class="text-right">${fmt(subtotal)}</div></div>
         <div class="totals-row"><div class="small">TVA (${fmt(tax)}%)</div><div class="text-right">${fmt(taxAmount)}</div></div>
         <div class="totals-row"><div class="small">Remise</div><div class="text-right">-${fmt(discountVal)}</div></div>
-        <hr style="border:none;border-top:1px solid #f0f2f7"/>
-        <div class="totals-row" style="font-weight:700;font-size:16px"><div>Total</div><div class="text-right">${fmt(total)}</div></div>
+        <hr style="border:none;border-top:1px solid #1f2937;margin-top:6px;margin-bottom:6px"/>
+        <div class="totals-row" style="font-weight:700;font-size:16px;color:#fbbf24">
+          <div>Total</div><div class="text-right">${fmt(total)}</div>
+        </div>
       </div>
     `;
   }
 
-  // PDF generation using html2pdf (client-side). We'll load from CDN dynamically.
   function loadHtml2pdf(){
     return new Promise((resolve,reject)=>{
       if(window.html2pdf) return resolve(window.html2pdf);
@@ -368,7 +525,6 @@
 
   generateBtn.addEventListener('click', async ()=>{
     refreshPreview();
-    // ensure there's at least one item
     const items = getItems();
     if(items.length === 0){
       alert('Ajoutez au moins une ligne de facture.');
@@ -382,25 +538,47 @@
       return;
     }
 
-    // Clone the invoice area and make a print-optimized version
+    // Clone l'aperçu et conserve le thème sombre pour le PDF
     const clone = invoiceArea.cloneNode(true);
-    // strip buttons if any and set clean styles
-    clone.style.width = '210mm'; // A4 width
+    clone.style.width = '190mm';
+    clone.style.maxWidth = '190mm';
+    clone.style.margin = '0';
+    clone.style.borderRadius = '0';
+    clone.style.border = 'none';
     clone.style.boxShadow = 'none';
-    clone.style.margin = '10mm';
-    clone.querySelectorAll('.btn').forEach(n=>n.remove());
-    // Use html2pdf
+    clone.style.background = '#020617';
+    clone.style.padding = '10mm';
+    clone.style.color = '#f9fafb';
+
+    clone.querySelectorAll('table').forEach(t => {
+      t.style.width = '100%';
+      t.querySelectorAll('th').forEach(th=>{
+        th.style.background = 'linear-gradient(135deg,#f97316,#facc15)';
+        th.style.color = '#111827';
+        th.style.borderBottom = '1px solid #111827';
+      });
+      t.querySelectorAll('td').forEach(td=>{
+        td.style.background = '#020617';
+        td.style.color = '#f9fafb';
+        td.style.borderBottom = '1px solid #111827';
+      });
+    });
+
     const opt = {
-      margin: [10,10,10,10],
+      margin: [0,0,0,0],
       filename: (invoiceNumber.value || 'facture') + '.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    // Create a temporary container
+
     const wrapper = document.createElement('div');
-    wrapper.style.background = '#fff';
+    wrapper.style.background = '#020617';
+    wrapper.style.width = '210mm';
+    wrapper.style.minHeight = '297mm';
+    wrapper.style.padding = '0';
     wrapper.appendChild(clone);
+
     document.body.appendChild(wrapper);
     try{
       await window.html2pdf().set(opt).from(wrapper).save();
@@ -412,12 +590,8 @@
     }
   });
 
-  // keep preview reactive
   setInterval(refreshPreview, 1200);
-
-  // ensure preview initially correct
   refreshPreview();
-
 </script>
 </body>
 </html>
