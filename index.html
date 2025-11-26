@@ -359,7 +359,7 @@
     return new Promise((resolve,reject)=>{
       if(window.html2pdf) return resolve(window.html2pdf);
       const s = document.createElement('script');
-      s.src = 'https://unpkg.com/html2pdf.js@0.9.3/dist/html2pdf.bundle.min.js';
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js';
       s.onload = ()=>resolve(window.html2pdf);
       s.onerror = ()=>reject(new Error('Échec du chargement de html2pdf'));
       document.head.appendChild(s);
