@@ -507,10 +507,10 @@ AGDAL RABAT</textarea>
       subtotal += amount;
 
       const serviceHtml = it.desc
-        ? `<strong>${escapeHtmlWithBreaks(it.desc)}</strong>`
+        ? `<strong>${escapeHtmlWithBreaks(it.desc)}</strong>` 
         : '';
       const notesHtml = it.notes
-        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtmlWithBreaks(it.notes)}</div>`
+        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtmlWithBreaks(it.notes)}</div>` 
         : '';
 
       row.innerHTML = `
@@ -602,7 +602,6 @@ AGDAL RABAT</textarea>
     const wrapper = document.createElement('div');
     wrapper.style.background = '#020617';
     wrapper.style.width = '210mm';
-    wrapper.style.minHeight = '297mm';
     wrapper.style.padding = '0';
     wrapper.appendChild(clone);
 
