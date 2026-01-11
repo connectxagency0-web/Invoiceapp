@@ -576,6 +576,8 @@ AGDAL RABAT</textarea>
     clone.style.background = '#020617';
     clone.style.padding = '10mm';
     clone.style.color = '#f9fafb';
+    clone.style.height = 'auto';
+    clone.style.overflow = 'hidden';
 
     clone.querySelectorAll('table').forEach(t => {
       t.style.width = '100%';
@@ -603,6 +605,8 @@ AGDAL RABAT</textarea>
     wrapper.style.background = '#020617';
     wrapper.style.width = '210mm';
     wrapper.style.padding = '0';
+    wrapper.style.height = 'auto';
+    wrapper.style.pageBreakInside = 'avoid';
     wrapper.appendChild(clone);
 
     document.body.appendChild(wrapper);
