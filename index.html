@@ -507,10 +507,10 @@ AGDAL RABAT</textarea>
       subtotal += amount;
 
       const serviceHtml = it.desc
-        ? `<strong>${escapeHtmlWithBreaks(it.desc)}</strong>` 
+        ? `<strong>${escapeHtmlWithBreaks(it.desc)}</strong>`
         : '';
       const notesHtml = it.notes
-        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtmlWithBreaks(it.notes)}</div>` 
+        ? `<div class="small" style="color:#e5e7eb;margin-top:2px">${escapeHtmlWithBreaks(it.notes)}</div>`
         : '';
 
       row.innerHTML = `
@@ -576,8 +576,6 @@ AGDAL RABAT</textarea>
     clone.style.background = '#020617';
     clone.style.padding = '10mm';
     clone.style.color = '#f9fafb';
-    clone.style.height = 'auto';
-    clone.style.overflow = 'hidden';
 
     clone.querySelectorAll('table').forEach(t => {
       t.style.width = '100%';
@@ -593,29 +591,22 @@ AGDAL RABAT</textarea>
       });
     });
 
+    const opt = {
+      margin: [0,0,0,0],
+      filename: (invoiceNumber.value || 'devis') + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#020617' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
     const wrapper = document.createElement('div');
     wrapper.style.background = '#020617';
     wrapper.style.width = '210mm';
+    wrapper.style.minHeight = '297mm';
     wrapper.style.padding = '0';
-    wrapper.style.height = 'auto';
-    wrapper.style.display = 'inline-block';
     wrapper.appendChild(clone);
 
     document.body.appendChild(wrapper);
-
-    const opt = {
-      margin: 0,
-      filename: (invoiceNumber.value || 'devis') + '.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true, 
-        backgroundColor: '#020617',
-        width: wrapper.offsetWidth,
-        height: wrapper.offsetHeight
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
     try{
       await window.html2pdf().set(opt).from(wrapper).save();
     }catch(err){
@@ -631,3 +622,4 @@ AGDAL RABAT</textarea>
 </script>
 </body>
 </html>
+
