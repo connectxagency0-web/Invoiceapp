@@ -593,23 +593,29 @@ AGDAL RABAT</textarea>
       });
     });
 
-    const opt = {
-      margin: [0,0,0,0],
-      filename: (invoiceNumber.value || 'devis') + '.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#020617' },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
     const wrapper = document.createElement('div');
     wrapper.style.background = '#020617';
     wrapper.style.width = '210mm';
     wrapper.style.padding = '0';
     wrapper.style.height = 'auto';
-    wrapper.style.pageBreakInside = 'avoid';
+    wrapper.style.display = 'inline-block';
     wrapper.appendChild(clone);
 
     document.body.appendChild(wrapper);
+
+    const opt = {
+      margin: 0,
+      filename: (invoiceNumber.value || 'devis') + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        backgroundColor: '#020617',
+        width: wrapper.offsetWidth,
+        height: wrapper.offsetHeight
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
     try{
       await window.html2pdf().set(opt).from(wrapper).save();
     }catch(err){
